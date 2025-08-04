@@ -4,7 +4,7 @@ import numpy as np
 import joblib
 
 # Load the trained model
-model = joblib.load('xgb_model.pkl')
+model = joblib.load('xgb_model2.pkl')
 
 st.title("Customer Churn Prediction 🏃‍♂️‍➡️")
 
@@ -12,9 +12,9 @@ col1, col2 = st.columns(2)
 
 with col1:
     gender = st.selectbox("Gender ♂️ ️♀️", ["Male", "Female"])
-    geography = st.selectbox("Geography 🗺️", ["Germany", "Spain"])
+    geography = st.selectbox("Geography 🗺️", ["Germany", "Spain" , "France"])
     credit_score = st.number_input("Credit Score ⭐", min_value=300, max_value=900)
-    age = st.number_input("Age 🧑‍🦰", min_value=21, max_value=100)
+    age = st.number_input("Age 🧑‍🦰", min_value=18, max_value=100)
     estimated_salary = st.number_input("Estimated Salary 💵")
 
 
@@ -32,19 +32,21 @@ has_cr_card = 1 if has_cr_card == "Yes" else 0
 is_active_member = 1 if is_active_member == "Yes" else 0
 
 # One-Hot Encode Geography (drop_first=True was likely used in training)
+geography_France = 1 if geography == "France" else 0
 geography_Germany = 1 if geography == "Germany" else 0
 geography_Spain = 1 if geography == "Spain" else 0
-# France is the base case (drop_first=True), so no column for it
+is_zero_balance = 1 if balance == 0 else 0
 
 input_data = pd.DataFrame([[
     credit_score, gender, age, tenure, balance,
     num_of_products, has_cr_card, is_active_member,
-    estimated_salary, geography_Germany, geography_Spain
+    estimated_salary, geography_France, geography_Germany, geography_Spain, is_zero_balance
 ]], columns=[
     'CreditScore', 'Gender', 'Age', 'Tenure', 'Balance',
     'NumOfProducts', 'HasCrCard', 'IsActiveMember',
-    'EstimatedSalary', 'Geography_Germany', 'Geography_Spain'
+    'EstimatedSalary', 'Geography_France', 'Geography_Germany', 'Geography_Spain', 'is_zero_balance'
 ])
+
 
 # Predict
 if st.button("Predict"):
